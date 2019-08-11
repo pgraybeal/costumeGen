@@ -18,13 +18,6 @@ items = []
 stats = {}
 itemSlots = {}
 
-"""equipment": {"attack_stab": 0, "attack_slash": 0, "attack_crush": 0,
-              "attack_magic": 0, "attack_ranged": 8, "defence_stab": 0,
-              "defence_slash": 0, "defence_crush": 0, "defence_magic": 0,
-              "defence_ranged": 0, "melee_strength": 0, "ranged_strength": 0,
-              "magic_damage": 0, "prayer": 0, "slot": "2h", "requirements": {"ranged": 1}},
-"""
-
 
 def getSlotType(statsDict):
     for slotType in statsDict:
@@ -41,7 +34,6 @@ def extractStats(jsonDict):
         response = urlopen(jsonUrl)
         rawData = response.read().decode("utf-8")
         data = json.loads(rawData)
-        # print(data2h)
         stats.setdefault(slotType, {})
 
         for k, v in data.items():
