@@ -15,7 +15,8 @@ slotJsons = {'2h': 'https://www.osrsbox.com/osrsbox-db/items-json-slot/items-2h.
              'shield': 'https://www.osrsbox.com/osrsbox-db/items-json-slot/items-shield.json',
              'weapon': 'https://www.osrsbox.com/osrsbox-db/items-json-slot/items-weapon.json'}
 items = []
-stats2h = {}
+stats = {}
+itemSlots = {}
 
 """equipment": {"attack_stab": 0, "attack_slash": 0, "attack_crush": 0,
               "attack_magic": 0, "attack_ranged": 8, "defence_stab": 0,
@@ -23,6 +24,12 @@ stats2h = {}
               "defence_ranged": 0, "melee_strength": 0, "ranged_strength": 0,
               "magic_damage": 0, "prayer": 0, "slot": "2h", "requirements": {"ranged": 1}},
 """
+
+
+def getSlotType(statsDict):
+    for slotType in statsDict:
+        for item in statsDict[slotType]:
+            itemSlots.setdefault(item, statsDict[slotType][item]['slot'])
 
 
 def extractStats(jsonDict):
@@ -33,22 +40,29 @@ def extractStats(jsonDict):
             from urllib2 import urlopen
         response = urlopen(jsonUrl)
         rawData = response.read().decode("utf-8")
-        data2h = json.loads(rawData)
+        data = json.loads(rawData)
         # print(data2h)
-        stats2h.setdefault(slotType, {})
+        stats.setdefault(slotType, {})
 
-        for k, v in data2h.items():
+        for k, v in data.items():
             for k1, v1 in v.items():
                 if k1 == "name":
                     if v1 not in items:
-                        items.append(v1)
+                        items.append(v1.lower())
                 if k1 == "equipment":
-                    stats2h[slotType].setdefault(v["name"], v1)
-    print(stats2h)
+                    stats[slotType].setdefault(v["name"].lower(), v1)
+
+
+def getStats(itemName):
+    itemType = itemSlots[itemName.lower()]
+    print(stats[itemType][itemName.lower()])
 
 
 def main():
     extractStats(slotJsons)
+    getSlotType(stats)
+    getStats('Maple longbow')
+    getStats('yew Longbow')
 
 
 if __name__ == "__main__":
