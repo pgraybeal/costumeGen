@@ -2,6 +2,7 @@
 # import json files for items and dl the pertinent info
 
 import json
+from osrsbox import items_api
 slotJsons = {'2h': 'https://www.osrsbox.com/osrsbox-db/items-json-slot/items-2h.json',
              'ammo': 'https://www.osrsbox.com/osrsbox-db/items-json-slot/items-ammo.json',
              'body': 'https://www.osrsbox.com/osrsbox-db/items-json-slot/items-body.json',
@@ -17,6 +18,14 @@ slotJsons = {'2h': 'https://www.osrsbox.com/osrsbox-db/items-json-slot/items-2h.
 items = []
 stats = {}
 itemSlots = {}
+
+
+def id_to_name():
+    idToName = {}
+
+    for item in items_api.load():
+        id_to_name[item.id] = item.name
+    return idToName
 
 
 def getSlotType(statsDict):
