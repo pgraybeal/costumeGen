@@ -63,6 +63,7 @@ def main():
     extractStats(slotJsons)
     getSlotType(stats)
     getStats('Maple longbow')
+    print('hi')
 
 
 if __name__ == "__main__":
