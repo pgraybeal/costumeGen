@@ -59,9 +59,11 @@ class EquipmentView:
         # based on what the slot is, replace the current item with that item
         # then, using coordinates, put the item on the equipment image
 
-        equippedItems[slot] = itemName.lower()
+        if equippedItems[slot] == None:
+            equippedItems[slot] = itemName.lower()
 
         if equippedItems[slot] != None:
+            equippedItems[slot] = itemName.lower()
             getAllStats()
             # IMPORTANT: this will replace anything equipped, but if we replace an equipped item, we need to rerun statsLookup
 
