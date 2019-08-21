@@ -54,16 +54,14 @@ class EquipmentView:
                          }
 
     def equip(self, itemName):
-        slot = itemSlots[itemName.lower()]  #Getting a key error here??? How??
+        slot = itemSlots[itemName.lower()]  # Getting a key error here??? How??
         image = item.get_image()
         # based on what the slot is, replace the current item with that item
         # then, using coordinates, put the item on the equipment image
 
-        if equippedItems[slot] == None:
-            equippedItems[slot] = itemName.lower()
+        equippedItems[slot] = itemName.lower()
 
-        elif equippedItems[slot] != None:
-            equippedItems[slot] = itemName.lower()
+        if equippedItems[slot] != None:
             getAllStats()
             # IMPORTANT: this will replace anything equipped, but if we replace an equipped item, we need to rerun statsLookup
 
