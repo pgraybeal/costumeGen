@@ -19,7 +19,6 @@ slotJsons = {'2h': 'https://www.osrsbox.com/osrsbox-db/items-json-slot/items-2h.
              'weapon': 'https://www.osrsbox.com/osrsbox-db/items-json-slot/items-weapon.json'}
 items = []
 stats = {}
-loadedStats = {}
 itemSlots = {}
 
 
@@ -61,12 +60,14 @@ def importPickle(directory):
     with open(directory, 'rb') as handle:
         stats = pickle.load(handle)
     return stats
-        
 
 
-def statsLookup(itemName, statsDict, itemSlotsDict):        #itemSlotsDict is my dict with just itemName:itemType
-    itemType = itemSlotsDict[itemName.lower()]
-    print(statsDict[itemType][itemName.lower()])
+def statsLookup(itemName, statsDict, itemSlotsDict):  # itemSlotsDict is my dict with just itemName:itemType
+    if itemName == None:
+        print({'attack_stab': 0, 'attack_slash': 0, 'attack_crush': 0, 'attack_magic': 0, 'attack_ranged': 0, 'defence_stab': 0, 'defence_slash': 0, 'defence_crush': 0, 'defence_magic': 0, 'defence_ranged': 0, 'melee_strength': 0, 'ranged_strength': 0, 'magic_damage': 0, 'prayer': 0, 'slot': None, 'requirements': 'None'})
+    else:
+        itemType = itemSlotsDict[itemName.lower()]
+        print(statsDict[itemType][itemName.lower()])
 
 
 def main():
@@ -74,11 +75,11 @@ def main():
     itemSlots = importPickle('itemSlots.pickle')
     statsLookup('Maple longbow', stats, itemSlots)
     #print(itemSlots['Maple longbow'.lower()])
-    
 
-    #No need to run the below anymore, can just import locally (NOTE TO SIYANG: you can't use directories with importing pickles, save locally)
-    #getSlotType(stats)
-    #extractStats(slotJsons)
+    # No need to run the below anymore, can just import locally (NOTE TO SIYANG: you can't use directories with importing pickles, save locally)
+    # getSlotType(stats)
+    # extractStats(slotJsons)
+
 
 if __name__ == "__main__":
     main()
