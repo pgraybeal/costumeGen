@@ -57,10 +57,9 @@ class Equipment:
                               }
 
     def equip(self, itemName):
-        self.slot = self.itemSlots[itemName.lower()]  # Getting a key error here??? How??
+        self.slot = self.itemSlots[itemName.lower()]
         # image = item.get_image()
 
-        # based on what the slot is, replace the current item with that item
         # then, using coordinates, put the item on the equipment image
 
         if self.equippedItems[self.slot] == None:
@@ -68,11 +67,26 @@ class Equipment:
 
         elif self.equippedItems[self.itemSlots[itemName.lower()]] != None:
             self.equippedItems[self.itemSlots[itemName.lower()]] = itemName.lower()
-            getAllStats()
-            # IMPORTANT: this will replace anything equipped, but if we replace an equipped item, we need to rerun statsLookup
+
+        # self.getAllStats()
+        # IMPORTANT: this will replace anything equipped, but if we replace an equipped item, we need to rerun statsLookup
+
+    def unequip(self, argument):  # can unequip by item or by slot, or unequip all
+        if argument.lower() == 'all':                           # unequips all
+            for key in self.equippedItems.keys():
+                self.equippedItems[key] = None
+        elif argument.lower() in self.equippedItems.values():        # unequips by item name
+            self.equippedItems[self.itemSlots[argument.lower()]] = None
+        elif argument.lower() in self.equippedItems.keys():          # unequips by slot type
+            self.equippedItems[argument] = None
+        else:
+            print("That item is not equipped!")
+        # self.getAllStats()
 
     def getAllStats(self):        # sum of stats of all items
-        total = {'attack_stab': 0, 'attack_slash': 0, 'attack_crush': 0, 'attack_magic': 0, 'attack_ranged': 0, 'defence_stab': 0, 'defence_slash': 0, 'defence_crush': 0, 'defence_magic': 0, 'defence_ranged': 0, 'melee_strength': 0, 'ranged_strength': 0, 'magic_damage': 0, 'prayer': 0, 'requirements': ''}
+        total = {'attack_stab': 0, 'attack_slash': 0, 'attack_crush': 0, 'attack_magic': 0, 'attack_ranged': 0, 'defence_stab': 0,
+                 'defence_slash': 0, 'defence_crush': 0, 'defence_magic': 0, 'defence_ranged': 0, 'melee_strength': 0,
+                 'ranged_strength': 0, 'magic_damage': 0, 'prayer': 0, 'requirements': ''}
         for itemName in self.equippedItems.values():
             for attackType in total.keys():
                 if attackType != 'slot' and attackType != 'requirements':
@@ -83,7 +97,7 @@ class Equipment:
                     total['requirements'] = total['requirements'] + " " + str(statsLookup(itemName, self.stats, self.itemSlots)['requirements'])
 
          # use for loop to run statsLookup on all items, return total
-        print(total)
+        return total
 
     def reset(self):
         self.helmet = None
@@ -112,12 +126,17 @@ def main():
     instance.equip('maple longbow')
     instance.printEquipped()
     print("")
-    instance.getAllStats()
+    print(instance.getAllStats())
     instance.equip('primordial boots')
     print("")
     instance.printEquipped()
     print("")
-    instance.getAllStats()
+    print(instance.getAllStats())
+    print('')
+    instance.unequip('primordial boots')
+    instance.printEquipped()
+    print('')
+    print(instance.getAllStats())
 
 
 if __name__ == "__main__":
