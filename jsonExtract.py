@@ -2,6 +2,8 @@
 # import json files for items and dl the pertinent info
 
 import json
+import pickle
+
 from osrsbox import items_api
 slotJsons = {'2h': 'https://www.osrsbox.com/osrsbox-db/items-json-slot/items-2h.json',
              'ammo': 'https://www.osrsbox.com/osrsbox-db/items-json-slot/items-ammo.json',
@@ -17,6 +19,7 @@ slotJsons = {'2h': 'https://www.osrsbox.com/osrsbox-db/items-json-slot/items-2h.
              'weapon': 'https://www.osrsbox.com/osrsbox-db/items-json-slot/items-weapon.json'}
 items = []
 stats = {}
+loadedStats = {}
 itemSlots = {}
 
 
@@ -54,16 +57,28 @@ def extractStats(jsonDict):
                     stats[slotType].setdefault(v["name"].lower(), v1)
 
 
-def getStats(itemName):
-    itemType = itemSlots[itemName.lower()]
-    print(stats[itemType][itemName.lower()])
+def importPickle(directory):
+    with open(directory, 'rb') as handle:
+        stats = pickle.load(handle)
+    return stats
+        
+
+
+def statsLookup(itemName, statsDict, itemSlotsDict):        #itemSlotsDict is my dict with just itemName:itemType
+    itemType = itemSlotsDict[itemName.lower()]
+    print(statsDict[itemType][itemName.lower()])
 
 
 def main():
-    extractStats(slotJsons)
-    getSlotType(stats)
-    getStats('Maple longbow')
+    stats = importPickle('stats.pickle')
+    itemSlots = importPickle('itemSlots.pickle')
+    statsLookup('Maple longbow', stats, itemSlots)
+    #print(itemSlots['Maple longbow'.lower()])
+    
 
+    #No need to run the below anymore, can just import locally (NOTE TO SIYANG: you can't use directories with importing pickles, save locally)
+    #getSlotType(stats)
+    #extractStats(slotJsons)
 
 if __name__ == "__main__":
     main()
