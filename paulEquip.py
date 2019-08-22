@@ -4,7 +4,6 @@ from jsonExtract import importPickle, statsLookup
 
 coordinates = {}  # dictionary containing the image coordinates (on the equip tab) of each type of item
 image = 0
-# IMPORTANT: before this code, you would create variables 'stats' and 'itemSlots', and then import the pickle files
 
 
 class Equipment:
@@ -59,7 +58,6 @@ class Equipment:
     def equip(self, itemName):
         self.slot = self.itemSlots[itemName.lower()]
         # image = item.get_image()
-
         # then, using coordinates, put the item on the equipment image
 
         if self.equippedItems[self.slot] == None:
@@ -68,20 +66,24 @@ class Equipment:
         elif self.equippedItems[self.itemSlots[itemName.lower()]] != None:
             self.equippedItems[self.itemSlots[itemName.lower()]] = itemName.lower()
 
-        # self.getAllStats()
+        return self.getAllStats()
         # IMPORTANT: this will replace anything equipped, but if we replace an equipped item, we need to rerun statsLookup
 
     def unequip(self, argument):  # can unequip by item or by slot, or unequip all
         if argument.lower() == 'all':                           # unequips all
             for key in self.equippedItems.keys():
                 self.equippedItems[key] = None
+
         elif argument.lower() in self.equippedItems.values():        # unequips by item name
             self.equippedItems[self.itemSlots[argument.lower()]] = None
+
         elif argument.lower() in self.equippedItems.keys():          # unequips by slot type
             self.equippedItems[argument] = None
+
         else:
             print("That item is not equipped!")
-        # self.getAllStats()
+
+        return self.getAllStats()
 
     def getAllStats(self):        # sum of stats of all items
         total = {'attack_stab': 0, 'attack_slash': 0, 'attack_crush': 0, 'attack_magic': 0, 'attack_ranged': 0, 'defence_stab': 0,
@@ -94,19 +96,26 @@ class Equipment:
                 if attackType == "slot":
                     pass
                 if attackType == "requirements":
-                    total['requirements'] = total['requirements'] + " " + str(statsLookup(itemName, self.stats, self.itemSlots)['requirements'])
+                    if total[attackType] == None:
+                        total[attackType] = str(statsLookup(itemName, self.stats, self.itemSlots)[attackType])
+                    else:
+                        total[attackType] = total[attackType] + str(statsLookup(itemName, self.stats, self.itemSlots)[attackType])
 
-         # use for loop to run statsLookup on all items, return total
+        total['requirements'] = total['requirements'].replace("}{", "}, {")
         return total
 
+    def getPrice(self):
+        pass
+
     def reset(self):
+        self.twoHand = None
         self.helmet = None
         self.amulet = None
         self.ring = None
         self.body = None
         self.legs = None
         self.gloves = None
-        self.boots = None
+        self.feet = None
         self.cape = None
         self.ammo = None
         self.weapon = None
@@ -123,20 +132,16 @@ class Equipment:
 
 def main():
     instance = Equipment(image)
-    instance.equip('maple longbow')
+    print(instance.equip('maple longbow'))
     instance.printEquipped()
     print("")
-    print(instance.getAllStats())
-    instance.equip('primordial boots')
+    print(instance.equip('primordial boots'))
     print("")
-    instance.printEquipped()
-    print("")
-    print(instance.getAllStats())
-    print('')
-    instance.unequip('primordial boots')
     instance.printEquipped()
     print('')
-    print(instance.getAllStats())
+
+    print(instance.unequip('primordial boots'))
+    instance.printEquipped()
 
 
 if __name__ == "__main__":
